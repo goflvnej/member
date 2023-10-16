@@ -18,4 +18,7 @@ public interface ShippingService {
     // 조회 (해당 주소 1개)
     ShippingDTO readOne(Long mid);
 
+    // 수정
+    void modify(ShippingDTO shippingDTO);
+
 }

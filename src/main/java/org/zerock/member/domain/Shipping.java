@@ -39,24 +39,12 @@ public class Shipping extends BaseEntity {
     private String ddefault;   // 기본배송지
 
     // 배송지명 수정
-    public void changeDname(String dname){
+    public void change(String dname, String zonecode, String address, String daddress, String dphonenum, String ddefault){
         this.dname = dname;
-    }
-
-    // 우편번호, 주소, 상세 주소 수정
-    public void changeDadd(String zonecode, String address, String daddress){
         this.zonecode = zonecode;
         this.address = address;
         this.daddress = daddress;
-    }
-
-    // 휴대폰 번호 수정
-    public void changeDphonenum(String dphonenum){
         this.dphonenum = dphonenum;
-    }
-
-    // 기본 배송지 여부 수정
-    public void changeDdefault(String ddefault) {
         this.ddefault = ddefault;
     }
 

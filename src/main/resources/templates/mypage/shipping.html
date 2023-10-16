@@ -43,16 +43,21 @@
 
 <div id="shippingList" th:each="dto : ${shippingDTO}">
 
-    <p>[[${dto.dname}]]</p>
-    <div th:if="${dto.ddefault} != null">기본 배송지</div>
-    [[${dto.dperson}]]
-    [[${dto.address}]]
-    [[${dto.daddress}]]
-    [[${dto.dphonenum}]]
+    <form name="frm_shippingList" action="/mypage/removeShipping" method="post">
 
-    <button th:class="button-remove-modal" th:if="${dto.ddefault} == null">삭제</button>
-    <button th:class="button-modify-modal" class="modifyBtn"
-            th:attr="onclick=|sendAttr('${dto.ddefault}', '${dto.dname}', '${dto.dperson}', '${dto.zonecode}', '${dto.address}', '${dto.daddress}', '${dto.dphonenum}')|">수정</button>
+        <input type="hidden" name="dno" th:value="${dto.dno}">
+
+        <p>[[${dto.dname}]]</p>
+        <div th:if="${dto.ddefault} != null">기본 배송지</div>
+        [[${dto.dperson}]]
+        [[${dto.address}]]
+        [[${dto.daddress}]]
+        [[${dto.dphonenum}]]
+
+        <button type="submit" th:if="${dto.ddefault} == null">삭제</button>
+        <button type="button" th:class="button-modify-modal" class="modifyBtn"
+                th:attr="onclick=|sendAttr('${dto.dno}', '${dto.ddefault}', '${dto.dname}', '${dto.dperson}', '${dto.zonecode}', '${dto.address}', '${dto.daddress}', '${dto.dphonenum}')|">수정</button>
+    </form>
 
 </div>
 
@@ -62,6 +67,7 @@
 
         <form name="frm_shipping" id="shippingForm" action="/mypage/shipping" method="post">
             <input type="hidden" name="mid" th:value="${#authentication.principal.username}">
+            <input type="hidden" name="dno">
 
             <h3>배송지 추가</h3>
 
@@ -98,7 +104,7 @@
 
             <div>
                 <label>휴대폰 번호(-제외)</label>
-                <input type="txet" name="dphonenum" maxlength="11">
+                <input type="text" name="dphonenum" maxlength="11">
             </div>
 
             <div>
@@ -137,14 +143,13 @@
     const modal = document.querySelector('.modal');
     const btnCancelModal = document.querySelector('.btn-cancel-modal');             // 취소 버튼 (모달창 안)
 
-
+    // 배송지 추가 버튼 눌렀을 때 모달창 띄우기
     btnOpenModal.addEventListener("click", () => {
 
-
         modal.style.display = "flex";
-
     });
 
+    // 모달창 안 취소 버튼 동작
     btnCancelModal.addEventListener("click", function(e) {
 
         e.stopPropagation();    // 폼 데이터 전송 방지
@@ -154,21 +159,22 @@
         document.getElementById('shippingForm').reset();
 
         modal.style.display = "none";
-
     });
 
     // 리스트 데이터 추가 됐을 때 추가된 수정 버튼도 작동 되게 하기
     [].forEach.call(btnModifyModal, function (mod) {
-            mod.addEventListener("click", click, false);
+
+        mod.addEventListener("click", displayModal, false);
     });
 
-    function click(e){
+    function displayModal(){
         modal.style.display = "flex";
     }
 
     // 각 리스트 값을 모달창 폼 내부로 넘기기
-    function sendAttr(ddefault, dname, dperson, zonecode, address, daddress, dphonenum) {
+    function sendAttr(dno, ddefault, dname, dperson, zonecode, address, daddress, dphonenum) {
 
+        document.forms.frm_shipping.dno.value = dno;
         if(ddefault == "on") {
             document.querySelector('#checkbox').checked = true;
         }

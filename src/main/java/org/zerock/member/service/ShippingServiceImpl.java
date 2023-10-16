@@ -57,5 +57,15 @@ public class ShippingServiceImpl implements ShippingService {
         return shippingDTO;
     }
 
+    @Override
+    public void modify(ShippingDTO shippingDTO) {
+
+        Optional<Shipping> result = shippingRepository.findByDno(shippingDTO.getDno());
+        Shipping shipping = result.orElseThrow();
+        shipping.change(shippingDTO.getDname(), shippingDTO.getZonecode(), shippingDTO.getAddress(), shippingDTO.getDaddress(), shippingDTO.getDphonenum(), shippingDTO.getDdefault());
+        shippingRepository.save(shipping);
+
+    }
+
 
 }

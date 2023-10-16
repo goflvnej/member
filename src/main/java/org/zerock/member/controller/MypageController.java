@@ -63,9 +63,39 @@ public class MypageController {
         }
 
         log.info(shippingDTO);
+        log.info("등록 전 dno : " + shippingDTO.getDno());
 
-        Long dno = shippingService.register(shippingDTO);
-        redirectAttributes.addFlashAttribute("result", dno);
+        // 등록
+        if(shippingDTO.getDno() == null) {
+
+            Long dno = shippingService.register(shippingDTO);
+            redirectAttributes.addFlashAttribute("result", dno);
+
+            log.info("등록 후 dno : " + dno);
+
+            return "redirect:/mypage/shipping";
+        }
+
+        // 수정
+        if(shippingDTO.getDno() != null) {
+
+            log.info("전달 받은 dno 값 : " + shippingDTO.getDno());
+            shippingService.modify(shippingDTO);
+            redirectAttributes.addFlashAttribute("result", "modified");
+            redirectAttributes.addAttribute("dno", shippingDTO.getDno());
+
+            return "redirect:/mypage/shipping";
+        }
+
+        return "redirect:/mypage/shipping";
+    }
+    
+    // 삭제
+    @PostMapping("/removeShipping")
+    public String remove(Long dno, RedirectAttributes redirectAttributes) {
+
+        log.info("전송받은 dno 값" + dno);
+        redirectAttributes.addFlashAttribute("result", "removed");
 
         return "redirect:/mypage/shipping";
     }
