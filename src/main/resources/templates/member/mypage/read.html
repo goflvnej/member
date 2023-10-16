@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      layout:decorate="~{layout/basic.html}">
+
+<head>
+    <title>My Page</title>
+</head>
+
+<div layout:fragment="content">
+  <div class="row mt-3">
+    <div class="col">
+      <div class="card">
+
+        <div class="card-header">
+          MYPAGE
+        </div>
+
+        <div class="card-body">
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">아이디</span>
+              <input type="text" class="form-control" th:value="${dto.mid}" readonly>
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">이름</span>
+              <input type="text" class="form-control" th:value="${dto.mname}" readonly>
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">이메일</span>
+              <input type="email" class="form-control" th:value="${dto.memail}" readonly>
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">생년월일</span>
+              <input type="text" class="form-control" th:value="${dto.mbirthday}" readonly>
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">주소</span>
+              <input type="text" class="form-control" th:value="${dto.maddress}" readonly>
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">전화번호</span>
+              <input type="text" class="form-control" th:value="${dto.mphonenum}" readonly>
+            </div>
+
+            <!-- 사용자 정보를 이용해야 할 때 ${#authentication.principal} 이용 -->
+            <div class="float-end">
+
+                <!-- 회원정보 수정 버튼 -->
+                <a th:href="|@{/member/mypage/modify}|" class="text-decoration-none">
+                    <button type="button" class="btn btn-primary">Modify</button>
+                </a>
+
+                <!-- 회원탈퇴 버튼 -->
+                <a th:href="|@{/member/mypage/remove}|" class="text-decoration-none">
+                    <button type="button" class="btn btn-secondary">Remove</button>
+                </a>
+
+            </div>
+
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script layout:fragment="script" th:inline="javascript">
+
+</script>

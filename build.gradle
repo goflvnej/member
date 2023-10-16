@@ -1,0 +1,120 @@
+buildscript {
+    ext {
+        queryDslVersion = "5.0.0"
+    }
+}
+
+plugins {
+    id 'java'
+    id 'war'
+    id 'org.springframework.boot' version '2.7.6'
+    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+    id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10' // Querydsl 관련 설정 추가
+}
+
+group = 'org.zerock'
+version = '0.0.1-SNAPSHOT'
+
+// 소스 코드에서 사용할 수 있는 Java 버전을 17 버전으로 제한
+sourceCompatibility = '17'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    compileOnly 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    annotationProcessor 'org.projectlombok:lombok'
+    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+
+    // JUnit3, JUnit4 기반의 테스트를 필요로 하지 않을 때 해당 버전의 모듈 제거
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+
+    implementation 'org.mariadb.jdbc:mariadb-java-client:3.1.4'
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-java8time:3.0.4.RELEASE'
+    
+    // Lombok을 테스트 환경에서도 사용
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+
+    // Thymeleaf Layout Dialect https://mvnrepository.com/artifact/nz.net.ultraq.thymeleaf/thymeleaf-layout-dialect
+    implementation group: 'nz.net.ultraq.thymeleaf', name: 'thymeleaf-layout-dialect', version: '3.3.0'
+
+    // Querydsl 추가
+    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"       // querydsl 라이브러리
+    annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"  //  Querydsl 관련 코드 생성 기능 제공
+
+    // ModelMapper : DTO와 엔티티 간의 변환 처리 https://mvnrepository.com/artifact/org.modelmapper/modelmapper
+    implementation 'org.modelmapper:modelmapper:3.1.1'
+
+    // Spring Boot Starter Validation : 컨트롤러에서 객체의 제약 조건 검증 https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-validation
+    implementation 'org.springframework.boot:spring-boot-starter-validation:3.1.4'
+
+    // 스프링 시큐리티 라이브러리
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    // Thymeleaf Extras Springsecurity5 : Thymeleaf에서 로그인 인증 정보 처리 https://mvnrepository.com/artifact/org.thymeleaf.extras/thymeleaf-extras-springsecurity5
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5:3.0.4.RELEASE'
+
+    // 카카오 소셜 로그인
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+    /* 로그인 시큐리티 관련 설정
+    testImplementation 'org.springframework.security:spring-security-test' */
+
+    // controller 패키지의 모든 클래스에 대해 API 테스트 환경 구현 : http://localhost/swagger-ui/index.html
+    // https://mvnrepository.com/artifact/io.springfox/springfox-boot-starter
+    implementation 'io.springfox:springfox-boot-starter:3.0.0'
+
+    // https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui
+    implementation 'io.springfox:springfox-swagger-ui:3.0.0'
+
+
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+// Querydsl 설정 스크립트
+def querydslDir = "$buildDir/generated/querydsl"
+
+querydsl {
+    jpa = true
+    querydslSourcesDir = querydslDir
+}
+
+// IDE의 소스 폴더에 자동으로 넣어준다.
+sourceSets {
+    main.java.srcDir querydslDir
+}
+
+// 컴파일이 될때 같이 수행
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    querydsl.extendsFrom compileClasspath
+}
+
+// Q파일 생성
+compileQuerydsl {
+    options.annotationProcessorPath = configurations.querydsl
+}
+
+compileQuerydsl.doFirst {
+    if(file(querydslDir).exists() )
+        delete(file(querydslDir))
+}
