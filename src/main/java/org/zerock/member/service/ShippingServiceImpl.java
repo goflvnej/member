@@ -67,5 +67,11 @@ public class ShippingServiceImpl implements ShippingService {
 
     }
 
+    @Override
+    public void remove(Long dno) {
+
+        shippingRepository.deleteById(dno);
+    }
+
 
 }

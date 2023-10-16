@@ -44,7 +44,7 @@ public class MypageController {
         // 배송 주소 전체 조회
         model.addAttribute("shippingDTO", shippingService.readAll(mid));
 
-//        // 배송 모달창 1개 조회
+//        // 배송 모달창 1개 조회 -> 사용 안 함
 //        model.addAttribute("dto", shippingService.readOne(dno));
     }
 
@@ -95,6 +95,8 @@ public class MypageController {
     public String remove(Long dno, RedirectAttributes redirectAttributes) {
 
         log.info("전송받은 dno 값" + dno);
+
+        shippingService.remove(dno);
         redirectAttributes.addFlashAttribute("result", "removed");
 
         return "redirect:/mypage/shipping";

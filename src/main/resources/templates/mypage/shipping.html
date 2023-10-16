@@ -57,6 +57,7 @@
         <button type="submit" th:if="${dto.ddefault} == null">삭제</button>
         <button type="button" th:class="button-modify-modal" class="modifyBtn"
                 th:attr="onclick=|sendAttr('${dto.dno}', '${dto.ddefault}', '${dto.dname}', '${dto.dperson}', '${dto.zonecode}', '${dto.address}', '${dto.daddress}', '${dto.dphonenum}')|">수정</button>
+
     </form>
 
 </div>
