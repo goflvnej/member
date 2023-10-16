@@ -24,4 +24,6 @@ public interface ShippingService {
     // 삭제
     void remove(Long dno);
 
+    void modifyDdefault(String mid);
+
 }

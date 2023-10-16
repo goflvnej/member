@@ -68,6 +68,14 @@ public class MypageController {
         // 등록
         if(shippingDTO.getDno() == null) {
 
+            // 새로 등록되는 배송지가 기본배송지가 될 경우 기존 배송지를 기본 배송지에서 해제
+            if(shippingDTO.getDdefault() != null) {
+
+                log.info("배송지 추가 회원 mid " + shippingDTO.getMid());
+
+                shippingService.modifyDdefault(shippingDTO.getMid());
+            }
+
             Long dno = shippingService.register(shippingDTO);
             redirectAttributes.addFlashAttribute("result", dno);
 
@@ -78,6 +86,14 @@ public class MypageController {
 
         // 수정
         if(shippingDTO.getDno() != null) {
+
+            // 수정되는 배송지가 기본배송지가 될 경우 기존 배송지를 기본 배송지에서 해제
+            if(shippingDTO.getDdefault() != null) {
+
+                log.info("배송지 추가 회원 mid " + shippingDTO.getMid());
+
+                shippingService.modifyDdefault(shippingDTO.getMid());
+            }
 
             log.info("전달 받은 dno 값 : " + shippingDTO.getDno());
             shippingService.modify(shippingDTO);

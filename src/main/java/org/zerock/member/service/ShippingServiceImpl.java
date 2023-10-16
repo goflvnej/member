@@ -73,5 +73,11 @@ public class ShippingServiceImpl implements ShippingService {
         shippingRepository.deleteById(dno);
     }
 
+    @Override
+    public void modifyDdefault(String mid) {
+
+        shippingRepository.updateDdeafult(mid);
+    }
+
 
 }
