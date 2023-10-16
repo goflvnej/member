@@ -60,14 +60,14 @@
 <div class="modal">
     <div class="modal_body">
 
-        <form name="frm_shipping" action="/mypage/shipping" method="post">
+        <form name="frm_shipping" id="shippingForm" action="/mypage/shipping" method="post">
             <input type="hidden" name="mid" th:value="${#authentication.principal.username}">
 
             <h3>배송지 추가</h3>
 
             <div>
                 <p>배송지를 입력해 주세요.</p>
-                <input type="checkbox" name="ddefault"><span>기본 배송지로 설정</span>
+                <input type="checkbox" name="ddefault" id="checkbox"><span>기본 배송지로 설정</span>
             </div>
 
             <div>
@@ -130,28 +130,34 @@
     }
 
     // 리스트
-    const formObj = document.querySelector("#shippingList")
-
-    // 모달창
-    const modal = document.querySelector('.modal');
     const btnOpenModal = document.querySelector('.btn-open-modal');                 // 배송지 추가 버튼
-    const btnCancelModal = document.querySelector('.btn-cancel-modal');             // 취소 버튼 (모달창 안)
     var btnModifyModal = document.querySelectorAll('#shippingList, .modifyBtn');    // 수정 버튼
+
+    // 모달창 내부
+    const modal = document.querySelector('.modal');
+    const btnCancelModal = document.querySelector('.btn-cancel-modal');             // 취소 버튼 (모달창 안)
+
 
     btnOpenModal.addEventListener("click", () => {
 
+
         modal.style.display = "flex";
+
     });
 
     btnCancelModal.addEventListener("click", function(e) {
 
-        e.stopPropagation();
-        e.preventDefault();
+        e.stopPropagation();    // 폼 데이터 전송 방지
+        e.preventDefault();     // 폼 데이터 전송 방지
+
+        // 모달창 내부 폼 값 리셋
+        document.getElementById('shippingForm').reset();
 
         modal.style.display = "none";
 
     });
 
+    // 리스트 데이터 추가 됐을 때 추가된 수정 버튼도 작동 되게 하기
     [].forEach.call(btnModifyModal, function (mod) {
             mod.addEventListener("click", click, false);
     });
@@ -162,7 +168,10 @@
 
     // 각 리스트 값을 모달창 폼 내부로 넘기기
     function sendAttr(ddefault, dname, dperson, zonecode, address, daddress, dphonenum) {
-        document.forms.frm_shipping.ddefault.value = ddefault;
+
+        if(ddefault == "on") {
+            document.querySelector('#checkbox').checked = true;
+        }
         document.forms.frm_shipping.dname.value = dname;
         document.forms.frm_shipping.dperson.value = dperson;
         document.forms.frm_shipping.zonecode.value = zonecode;
