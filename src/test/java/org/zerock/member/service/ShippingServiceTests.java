@@ -4,10 +4,6 @@ import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.zerock.member.domain.Shipping;
-import org.zerock.member.dto.BoardDTO;
-import org.zerock.member.dto.PageRequestDTO;
-import org.zerock.member.dto.PageResponseDTO;
 import org.zerock.member.dto.ShippingDTO;
 
 import java.util.List;

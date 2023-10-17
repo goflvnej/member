@@ -10,8 +10,8 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-import org.zerock.member.domain.Member;
-import org.zerock.member.domain.MemberRole;
+import org.zerock.member.entity.Member;
+import org.zerock.member.entity.MemberRole;
 import org.zerock.member.repository.MemberRepository;
 import org.zerock.member.security.dto.MemberSecurityDTO;
 

@@ -2,7 +2,7 @@ package org.zerock.member.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.zerock.member.domain.Board;
+import org.zerock.member.entity.Board;
 import org.zerock.member.repository.search.BoardSearch;
 
 // JpaRepository 엔티티 타입 : Board, @Id 타입 : Long

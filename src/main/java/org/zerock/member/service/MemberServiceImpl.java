@@ -7,16 +7,12 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.zerock.member.domain.Board;
-import org.zerock.member.domain.Member;
-import org.zerock.member.domain.MemberRole;
-import org.zerock.member.dto.BoardDTO;
+import org.zerock.member.entity.Member;
+import org.zerock.member.entity.MemberRole;
 import org.zerock.member.dto.MemberJoinDTO;
 import org.zerock.member.repository.MemberRepository;
 import org.zerock.member.security.dto.MemberSecurityDTO;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 

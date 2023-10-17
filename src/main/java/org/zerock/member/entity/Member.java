@@ -1,4 +1,4 @@
-package org.zerock.member.domain;
+package org.zerock.member.entity;
 
 import lombok.*;
 

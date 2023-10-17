@@ -4,9 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import org.zerock.member.domain.Board;
-import org.zerock.member.domain.Shipping;
-import org.zerock.member.dto.BoardDTO;
+import org.zerock.member.entity.Shipping;
 import org.zerock.member.dto.ShippingDTO;
 import org.zerock.member.repository.ShippingRepository;
 

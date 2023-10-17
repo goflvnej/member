@@ -6,8 +6,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
-import org.zerock.member.domain.Board;
-import org.zerock.member.domain.QBoard;
+import org.zerock.member.entity.Board;
+import org.zerock.member.entity.QBoard;
 
 import java.util.List;
 

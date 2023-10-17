@@ -1,10 +1,7 @@
 package org.zerock.member.service;
 
-import org.zerock.member.domain.Shipping;
-import org.zerock.member.dto.BoardDTO;
 import org.zerock.member.dto.ShippingDTO;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface ShippingService {

@@ -6,7 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.zerock.member.domain.Board;
+import org.zerock.member.entity.Board;
 import org.zerock.member.dto.BoardDTO;
 import org.zerock.member.dto.PageRequestDTO;
 import org.zerock.member.dto.PageResponseDTO;

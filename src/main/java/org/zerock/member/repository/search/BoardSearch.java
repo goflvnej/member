@@ -2,7 +2,7 @@ package org.zerock.member.repository.search;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.zerock.member.domain.Board;
+import org.zerock.member.entity.Board;
 
 // Querydsl을 사용할 인터페이스 선언
 public interface BoardSearch {

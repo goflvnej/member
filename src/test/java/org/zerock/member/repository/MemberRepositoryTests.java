@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.Commit;
-import org.zerock.member.domain.Member;
-import org.zerock.member.domain.MemberRole;
+import org.zerock.member.entity.Member;
+import org.zerock.member.entity.MemberRole;
 
 import java.util.Optional;
 import java.util.stream.IntStream;

@@ -1,4 +1,4 @@
-package org.zerock.member.domain;
+package org.zerock.member.entity;
 
 import lombok.*;
 
@@ -22,7 +22,7 @@ public class Shipping extends BaseEntity {
 
     private String dname;       // 배송지명
 
-    private String dperson;       // 받는 분
+    private String dperson;     // 받는 분
 
     private String zonecode;    // 우편번호
 
