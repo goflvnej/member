@@ -65,8 +65,8 @@
 </div>
 
 <!--/* 배송지 모달창 */-->
-<div class="modal">
-    <div class="modal_body">
+<div class="modal" id="modal">
+    <div class="modal_body" id="modalBody">
 
         <form name="frm_shipping" id="shippingForm" action="/mypage/shipping" method="post">
             <input type="hidden" name="mid" th:value="${#authentication.principal.username}">
@@ -142,14 +142,27 @@
     const btnOpenModal = document.querySelector('.btn-open-modal');                         // 배송지 추가 버튼
     var btnModifyModal = document.querySelectorAll('#shippingList, .button-modify-modal');  // 수정 버튼
 
-    // 모달창 내부
-    const modal = document.querySelector('.modal');
+    // 모달창
+    const modal = document.querySelector('.modal');                                         // 모달창 바깥
+    const modalBody = document.querySelector('.modal-body');                                // 모달창 내부
     const btnCancelModal = document.querySelector('.btn-cancel-modal');                     // 취소 버튼 (모달창 안)
+
+    // 모달창 화면에 띄우기
+    function showModal(){
+
+        modal.style.display = "flex";
+    }
+
+    // 모달창 숨기기
+    function hideModal() {
+
+        modal.style.display = "none";
+    }
 
     // 배송지 추가 버튼 눌렀을 때 모달창 띄우기
     btnOpenModal.addEventListener("click", () => {
 
-        modal.style.display = "flex";
+        showModal();
     });
 
     // 모달창 내부의 취소 버튼 동작
@@ -161,7 +174,7 @@
         // 모달창 내부 폼 값 리셋
         document.getElementById('shippingForm').reset();
 
-        modal.style.display = "none";
+        hideModal();
     });
 
     // 리스트 데이터 추가 됐을 때 추가된 수정 버튼도 작동 되게 하기
@@ -172,15 +185,10 @@
             e.stopPropagation();
             e.preventDefault();
 
-            displayModal();
+            showModal();
 
         }, false);
     });
-
-    function displayModal(){
-
-        modal.style.display = "flex";
-    }
 
     // 각 리스트 값을 모달창 폼 내부로 넘기기
     function sendAttr(dno, ddefault, dname, dperson, zonecode, address, daddress, dphonenum) {
