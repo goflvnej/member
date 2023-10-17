@@ -60,7 +60,7 @@ public class ShippingServiceImpl implements ShippingService {
 
         Optional<Shipping> result = shippingRepository.findByDno(shippingDTO.getDno());
         Shipping shipping = result.orElseThrow();
-        shipping.change(shippingDTO.getDname(), shippingDTO.getZonecode(), shippingDTO.getAddress(), shippingDTO.getDaddress(), shippingDTO.getDphonenum(), shippingDTO.getDdefault());
+        shipping.change(shippingDTO.getDname(), shippingDTO.getDperson(), shippingDTO.getZonecode(), shippingDTO.getAddress(), shippingDTO.getDaddress(), shippingDTO.getDphonenum(), shippingDTO.getDdefault());
         shippingRepository.save(shipping);
 
     }
