@@ -43,15 +43,17 @@ public class CustomSecurityConfig {
 
         log.info("SecurityConfig.filterChain() 로그인 시 실행");
 
-        http.formLogin().loginPage("/member/login");    // Form 로그인 기능 작동, 커스텀 로그인 페이지
-        http.csrf().disable();                          // CSRF 토큰 비활성화 (기본값은 GET 방식 제외 요구) -> USERNAME과 PASSWORD 만으로 로그인 가능
+        http.formLogin()
+                .loginPage("/member/login")                 // Form 로그인 기능 작동, 커스텀 로그인 페이지
+                .defaultSuccessUrl("/member/mypage/read");  // 로그인 성공 시 리다이렉트 페이지
+        http.csrf().disable();                              // CSRF 토큰 비활성화 (기본값은 GET 방식 제외 요구) -> USERNAME과 PASSWORD 만으로 로그인 가능
 
         // remember-me 쿠키의 값을 인코딩하기 위한 키와 정보를 저장할 때 사용하는 tokenRepository 지정
         http.rememberMe()
                 .key("12345678")
                 .tokenRepository(persistentTokenRepository())
                 .userDetailsService(userDetailsService)
-                .tokenValiditySeconds(60*60*24*30);     // 유효 기간 30일
+                .tokenValiditySeconds(60*60*24*30);         // 유효 기간 30일
 
         // 403 에러 발생시 예외 처리로 로그인 페이지로 이동하고 파라미터에 error=ACCESS_DENIED 값 전달
         http.exceptionHandling().accessDeniedHandler(accessDeniedHandler());    
