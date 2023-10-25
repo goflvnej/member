@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.zerock.member.dto.BoardListReplyCountDTO;
 import org.zerock.member.entity.Board;
 
 import java.util.List;
@@ -118,6 +119,28 @@ public class BoardRepositoryTests {
         log.info("현재 페이지 번호 : " + result.getNumber());
         log.info("한 페이지당 게시글 개수 : " + result.getSize());
         log.info("다음 페이지 유무 ? : " + result.hasNext());
+
+        result.getContent().forEach(board -> log.info(board));
+    }
+
+    @Test
+    public void testSearchReplyCount() {
+
+        // 제목, 내용, 작성자 모두 선택
+        String[] types = {"t", "c", "w"};
+
+        // 키워드 1
+        String keyword = "9";
+
+        // 페이징 처리 (0번째 페이지, 게시글 10개씩, bno (게시글 번호) 기준 내림차순
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("bno").descending());
+
+        Page<BoardListReplyCountDTO> result = boardRepository.searchWithReplyCount(types, keyword, pageable);
+
+        log.info("전체 페이지 개수 " + result.getTotalPages());
+        log.info("1페이지당 게시글 개수 " + result.getSize());
+        log.info("현재 페이지 번호 " + result.getNumber());
+        log.info("다음 페이지 존재 여부 " + result.hasNext());
 
         result.getContent().forEach(board -> log.info(board));
     }

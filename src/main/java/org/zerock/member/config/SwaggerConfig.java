@@ -11,6 +11,8 @@ import springfox.documentation.spring.web.plugins.Docket;
 
 @Configuration
 public class SwaggerConfig {
+// controller 패키지의 모든 클래스에 대해 API 테스트 환경 구현
+// http://localhost/swagger-ui/index.html 경로로 호출
 
     @Bean
     public Docket api() {

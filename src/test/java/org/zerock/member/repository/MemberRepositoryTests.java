@@ -25,7 +25,7 @@ public class MemberRepositoryTests {
     @Test
     public void insertMembers() {
 
-        IntStream.rangeClosed(1,99).forEach(i -> {
+        IntStream.rangeClosed(1,100).forEach(i -> {
             Member member = Member.builder()
                     .mid("member" + i)
                     .mpassword(passwordEncoder.encode("1111"))

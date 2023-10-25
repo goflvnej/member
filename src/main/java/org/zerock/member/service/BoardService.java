@@ -1,6 +1,7 @@
 package org.zerock.member.service;
 
 import org.zerock.member.dto.BoardDTO;
+import org.zerock.member.dto.BoardListReplyCountDTO;
 import org.zerock.member.dto.PageRequestDTO;
 import org.zerock.member.dto.PageResponseDTO;
 
@@ -20,4 +21,7 @@ public interface BoardService {
 
     // 목록/검색
     PageResponseDTO<BoardDTO> list(PageRequestDTO pageRequestDTO);
+
+    // 댓글 숫자까지 처리하는 목록/검색
+    PageResponseDTO<BoardListReplyCountDTO> listWithReplyCount(PageRequestDTO pageRequestDTO);
 }
