@@ -26,7 +26,7 @@ import javax.validation.Valid;
 @RequestMapping("/mypage")
 @Log4j2
 @RequiredArgsConstructor
-@PreAuthorize("isAuthenticated()")  // 로그인한 사용자만 조회 가능
+@PreAuthorize("isAuthenticated()")  // 로그인한 사용자만 조회 가능 -> 비로그인 상태일 경우 로그인 화면으로 이동
 public class MypageController {
 
     private final ShippingService shippingService;
