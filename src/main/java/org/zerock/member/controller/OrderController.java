@@ -1,4 +1,3 @@
-/*
 package org.zerock.member.controller;
 
 import lombok.RequiredArgsConstructor;
@@ -26,7 +25,7 @@ public class OrderController {
     private final ShippingService shippingService;
 
     // 주문서 작성
-    @GetMapping("/info")
+    @GetMapping("/checkout")
     public void info(Principal principal, Model model) {
 
         log.info("OrderController.info() 주문서 작성 페이지");
@@ -46,4 +45,3 @@ public class OrderController {
 
     }
 }
-*/
