@@ -33,7 +33,7 @@ public class BoardRepositoryTests {
             Board board = Board.builder()
                     .title("제목 " + i)
                     .content("내용  " + i)
-                    .writer("user" + (i % 10))
+                    .writer("member" + (i % 10))
                     .build();
 
             // save()는 해당 엔티티 객체가 없으면 insert, 있으면 update를 실행

@@ -1,3 +1,4 @@
+/*
 package org.zerock.member.controller;
 
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ import java.security.Principal;
 @RequestMapping("/order")
 @Log4j2
 @RequiredArgsConstructor //자동 주입을 위한 Annotation
-@PreAuthorize("isAuthenticated()")  // 로그인한 사용자만 조회 가능
+@PreAuthorize("isAuthenticated()")  // 로그인한 사용자만 조회 가능 -> 비로그인 시 로그인 페이지로 이동
 public class OrderController {
 
     private final MemberService memberService;
@@ -36,7 +37,7 @@ public class OrderController {
         MemberSecurityDTO memberSecurityDTO = memberService.readOne(mid);
 
         model.addAttribute("memberDTO", memberSecurityDTO);
-        
+
         // 배송지 정보 전체 조회
         model.addAttribute("shippingDTOList", shippingService.readAll(mid));
 
@@ -45,3 +46,4 @@ public class OrderController {
 
     }
 }
+*/

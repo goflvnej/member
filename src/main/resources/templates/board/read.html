@@ -69,8 +69,253 @@
         </div>
     </div>
 
+    <div class="row mt-3">
+        <div class="col-md-12">
+
+            <div class="my-4">
+                <button class="btn btn-info addReplyBtn">ADD REPLY</button>
+            </div>
+
+            <ul class="list-group replyList">
+            </ul>
+
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col">
+
+            <ul class="pagination replyPaging">
+            </ul>
+
+        </div>
+    </div>
+
+    <!-- 댓글 등록을 위한 모달창 -->
+    <div class="modal registerModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Register Reply</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Reply Text</span>
+                        <input type="text" class="form-control replyText">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Replyer</span>
+                        <input type="text" class="form-control replyer">
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary registerBtn">Register</button>
+                    <button type="button" class="btn btn-outline-dark closeRegisterBtn">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- 댓글 수정을 위한 모달창 -->
+    <div class="modal modifyModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title replyHeader"></h5>   <!-- 자바스크립트로 댓글 번호 (rno) 출력 -->
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>    <!-- X 표시 -->
+                </div>
+
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Reply Text</span>
+                        <input type="text" class="form-control modifyText">
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info modifyBtn">Modify</button>
+                    <button type="button" class="btn btn-danger removeBtn">Remove</button>
+                    <button type="button" class="btn btn-outline-dark closeModifyBtn">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script src="/js/reply.js"></script>
+
 </div>
 
 <script layout:fragment="script" th:inline="javascript">
+
+    const bno = [[${dto.bno}]]
+
+    const replyList = document.querySelector('.replyList')                              // 댓글 목록 DOM
+    const replyPaging = document.querySelector('.replyPaging')                          // 페이지 목록 DOM
+
+    // 댓글 등록 모달
+    const registerModal = new bootstrap.Modal(document.querySelector(".registerModal"))
+    const registerBtn = document.querySelector(".registerBtn")
+    const replyText = document.querySelector(".replyText")
+    const replyer = document.querySelector(".replyer")
+    const closeRegisterBtn = document.querySelector(".closeRegisterBtn")
+
+    // 댓글 수정 모달
+    const modifyModal = new bootstrap.Modal(document.querySelector(".modifyModal"))
+    const replyHeader = document.querySelector(".replyHeader")
+    const modifyText = document.querySelector(".modifyText")
+    const modifyBtn = document.querySelector(".modifyBtn")
+    const removeBtn = document.querySelector(".removeBtn")
+    const closeModifyBtn = document.querySelector(".closeModifyBtn")
+
+    // 페이징 처리 된 댓글 목록과 페이지 출력
+    function printReplies(page, size, goLast) {
+
+        // 비동기 처리되는 결과를 반환해서 처리할 때 then()과 catch() 이용
+        getList({bno, page, size, goLast}).then(
+            data => {
+                printList(data.dtoList) // 목록 출력
+                printPages(data)        // 페이지 출력
+            }
+        ).catch(e => {
+            console.error(e)
+        })
+    }
+
+    printReplies(1, 10, true)
+
+    // 특정 게시글의 댓글 목록 출력
+    function printList(dtoList) {
+        let str = '';
+
+        if(dtoList && dtoList.length > 0) {
+
+            for(const dto of dtoList) {
+
+                str += `<li class="list-group-item d-flex replyItem">
+                        <span class="col-2">${dto.rno}</span>
+                        <span class="col-6" data-rno="${dto.rno}">${dto.replyText}</span>
+                        <span class="col-2">${dto.replyer}</span>
+                        <span class="col-2">${dto.regDate}</span>
+                    </li>`
+            }
+        }
+        replyList.innerHTML = str
+
+    }
+
+    // 특정 댓글 클릭시 모달창으로 상세 조회
+    replyList.addEventListener("click", function(e) {
+
+        e.preventDefault()
+        e.stopPropagation()
+
+        const target = e.target
+
+        if(!target || target.tagName != 'SPAN') {
+            return
+        }
+
+        const rno = target.getAttribute("data-rno")
+
+        if(!rno) {
+            return
+        }
+
+        getReply(rno).then(reply => {
+
+            console.log(reply)
+
+            replyHeader.innerHTML = reply.rno
+            modifyText.value = reply.replyText
+            modifyModal.show()
+        }).catch(e => alert('error'))
+    }, false)
+
+    // 댓글의 페이지 목록 출력
+    function printPages(data) {
+
+        let pageStr = '';
+
+        // 이전 페이지
+        if(data.prev) {
+            pageStr += `<li class="page-item"><a class="page-link" data-page="${data.start - 1}">PREV</a></li>`
+        }
+
+        // 페이지 번호
+        for(let i = data.start; i <= data.end; i++) {
+            pageStr += `<li class="page-item ${i == data.page ? "active" : ""}"><a class="page-link" data-page="${i}">${i}</a></li>`
+        }
+
+        // 다음 페이지
+        if(data.next) {
+            pageStr += `<li class="page-item"><a class="page-link" data-page="${data.end + 1}">NEXT</a></li>`
+        }
+        replyPaging.innerHTML = pageStr
+    }
+
+    // 댓글의 페이지 번호 클릭 시 페이지 이동
+    let page = 1
+    let size = 10
+
+    replyPaging.addEventListener("click", function(e) {
+
+        e.preventDefault()
+        e.stopPropagation()
+
+        const target = e.target
+
+        if(!target || target.tagName != 'A') {
+            return
+        }
+
+        const pageNum = target.getAttribute("data-page")
+        page = pageNum
+
+        printReplies(page, size)
+    }, false)
+
+    // addReplyBtn 버튼 클릭시 댓글 등록 모달창 띄우기
+    document.querySelector(".addReplyBtn").addEventListener("click", function(e) {
+        registerModal.show()
+    }, false)
+
+    // closeRegisterBtn 버튼 클릭시 댓글 등록 모달창 닫기
+    closeRegisterBtn.addEventListener("click", function(e) {
+        registerModal.hide()
+    }, false)
+
+    // 모달창 하단의 Register 버튼 클릭시 이벤트 처리
+    registerBtn.addEventListener("click", function(e) {
+
+        const replyObj = {
+            bno:bno,
+            replyText:replyText.value,
+            replyer:replyer.value
+        }
+
+        addReply(replyObj).then(result => {
+
+            alert(result.rno)
+            registerModal.hide()
+            replyText.value = ''
+            replyer.value = ''
+            printReplies(1, 10, true)
+        }).catch(e => {
+
+            alert("댓글 등록 모달창 등록 버튼 클릭시 예외 발생")
+        })
+    }, false)
 
 </script>

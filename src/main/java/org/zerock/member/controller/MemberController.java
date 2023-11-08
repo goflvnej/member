@@ -63,34 +63,5 @@ public class MemberController {
         return "redirect:/board/list";
     }
 
-    // 회원정보 조회
-    @PreAuthorize("isAuthenticated()")  // 로그인한 사용자만 조회 가능
-    @GetMapping({"/mypage/read", "/mypage/modify"})
-    public void read(Principal principal, Model model) {
 
-        log.info("MemberController.read() 회원정보 읽기 페이지");
-        log.info("유저 아이디 : " + principal.getName());
-
-        String mid = principal.getName();
-        MemberSecurityDTO memberSecurityDTO = memberService.readOne(mid);
-
-        model.addAttribute("dto", memberSecurityDTO);
-    }
-
-    // 회원정보 수정
-    @PostMapping("/mypage/modify")
-    public String modify(@Valid MemberSecurityDTO memberSecurityDTO, Model model, RedirectAttributes redirectAttributes) {
-
-        model.addAttribute("dto", memberSecurityDTO);
-
-        log.info("MemberController.modify() 회원정보 수정 페이지");
-        log.info("memberSecurityDTO 아이디, 비밀번호, 이름");
-        log.info(memberSecurityDTO.getMid(), memberSecurityDTO.getMpassword(), memberSecurityDTO.getMname());
-
-        redirectAttributes.addFlashAttribute("result", "modified");
-        memberService.modify(memberSecurityDTO);
-
-        return "redirect:/member/mypage/read";
-
-    }
 }

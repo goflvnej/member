@@ -21,7 +21,6 @@ public interface ShippingService {
     // 삭제
     void remove(Long dno);
 
-    // 기본배송지 수정
-    void modifyDdefault(String mid);
+    void modifySdefault(String mid);
 
 }

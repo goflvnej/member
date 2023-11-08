@@ -20,7 +20,7 @@ public class ShippingRepositoryTests {
     public void testSelect() {
         String mid = "member100";
 
-        List<Shipping> result = shippingRepository.findAllByMidOrderByDdefaultDesc(mid);
+        List<Shipping> result = shippingRepository.listOfShipping(mid);
 
         result.forEach(shipping -> log.info(shipping));
     }
@@ -29,7 +29,7 @@ public class ShippingRepositoryTests {
     public void testReadOne() {
         Long dno = 1L;
 
-        Optional<Shipping> shipping = shippingRepository.findByDno(dno);
+        Optional<Shipping> shipping = shippingRepository.findBySno(dno);
 
         log.info(shipping);
     }

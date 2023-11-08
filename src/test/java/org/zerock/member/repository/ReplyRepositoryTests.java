@@ -11,6 +11,8 @@ import org.springframework.data.domain.Sort;
 import org.zerock.member.entity.Board;
 import org.zerock.member.entity.Reply;
 
+import java.util.stream.IntStream;
+
 @SpringBootTest
 @Log4j2
 public class ReplyRepositoryTests {
@@ -24,18 +26,22 @@ public class ReplyRepositoryTests {
         // 실제 DB에 있는 bno 사용
         Long bno = 100L;
 
-        Board board = Board.builder()
-                .bno(bno)
-                .build();
+        IntStream.rangeClosed(1,100).forEach(i -> {
 
-        // 100번째 게시글 객체에 댓글 테스트
-        Reply reply = Reply.builder()
-                .board(board)
-                .replyText("댓글 테스트")
-                .replyer("member100")
-                .build();
+            Board board = Board.builder()
+                    .bno(bno)
+                    .build();
 
-        replyRepository.save(reply);
+            // Reply 클래스의 @Builder 어노테이션 사용
+            Reply reply = Reply.builder()
+                    .board(board)
+                    .replyText("댓글 테스트 " + i)
+                    .replyer("member100")
+                    .build();
+
+            // save()는 해당 엔티티 객체가 없으면 insert, 있으면 update를 실행
+            replyRepository.save(reply);
+        });
     }
 
     @Test

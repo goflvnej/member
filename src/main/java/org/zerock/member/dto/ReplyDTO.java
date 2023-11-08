@@ -1,5 +1,7 @@
 package org.zerock.member.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,6 +28,12 @@ public class ReplyDTO {
     @NotEmpty
     private String replyer;                 // 댓글 작성자
     
-    private LocalDateTime regDate, modDate; // 댓글 작성일, 수정일
+    // JSON 처리 시 포맷팅 지정
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime regDate;          // 댓글 작성일
+
+    // JSON 변환 시 화면에서 제외
+    @JsonIgnore
+    private LocalDateTime modDate;          // 댓글 수정일
     
 }

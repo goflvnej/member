@@ -44,7 +44,8 @@
 
           <div class="my-4">
             <div class="float-end">
-              <button type="submit" class="btn btn-primary submitBtn">LOGIN</button>
+              <button type="submit" class="btn btn-primary submitBtn">Login</button>
+              <button type="button" class="btn btn-secondary joinBtn">Sign Up</button>
             </div>
           </div>
 
@@ -60,4 +61,20 @@
     </div>
   </div>
 </body>
+
+<script>
+  const formObj = document.querySelector("#registerForm")
+
+  document.querySelector(".joinBtn").addEventListener("click", function(e) {
+    e.preventDefault()
+    e.stopPropagation()
+
+    formObj.action = `/member/join`
+    formObj.method = 'get'
+    formObj.submit()
+
+  }, false)
+
+</script>
+
 </html>

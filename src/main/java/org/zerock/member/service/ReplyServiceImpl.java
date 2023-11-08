@@ -71,7 +71,7 @@ public class ReplyServiceImpl implements ReplyService{
         Pageable pageable = PageRequest.of(
                 pageRequestDTO.getPage() <= 0 ? 0 : pageRequestDTO.getPage() - 1,   // 페이지 번호
                 pageRequestDTO.getSize(),                                           // 한 페이지당 댓글 개수
-                Sort.by("rno").descending());                             // 댓글 번호(rno) 내림차순
+                Sort.by("rno").ascending());                              // 댓글 번호(rno) 오름차순
 
         // 특정 게시글의 댓글을 조회해서 페이징 처리
         Page<Reply> result = replyRepository.listOfBoard(bno, pageable);

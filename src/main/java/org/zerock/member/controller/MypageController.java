@@ -18,9 +18,12 @@ import org.zerock.member.dto.BoardDTO;
 import org.zerock.member.dto.PageRequestDTO;
 import org.zerock.member.dto.PageResponseDTO;
 import org.zerock.member.dto.ShippingDTO;
+import org.zerock.member.security.dto.MemberSecurityDTO;
+import org.zerock.member.service.MemberService;
 import org.zerock.member.service.ShippingService;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 @Controller
 @RequestMapping("/mypage")
@@ -29,7 +32,40 @@ import javax.validation.Valid;
 @PreAuthorize("isAuthenticated()")  // 로그인한 사용자만 조회 가능 -> 비로그인 상태일 경우 로그인 화면으로 이동
 public class MypageController {
 
+    private final MemberService memberService;
+
     private final ShippingService shippingService;
+
+    // 회원정보 조회
+    @PreAuthorize("isAuthenticated()")  // 로그인한 사용자만 조회 가능
+    @GetMapping({"/read", "/modify"})
+    public void read(Principal principal, Model model) {
+
+        log.info("MemberController.read() 회원정보 읽기 페이지");
+        log.info("유저 아이디 : " + principal.getName());
+
+        String mid = principal.getName();
+        MemberSecurityDTO memberSecurityDTO = memberService.readOne(mid);
+
+        model.addAttribute("dto", memberSecurityDTO);
+    }
+
+    // 회원정보 수정
+    @PostMapping("/modify")
+    public String modify(@Valid MemberSecurityDTO memberSecurityDTO, Model model, RedirectAttributes redirectAttributes) {
+
+        model.addAttribute("dto", memberSecurityDTO);
+
+        log.info("MemberController.modify() 회원정보 수정 페이지");
+        log.info("memberSecurityDTO 아이디, 비밀번호, 이름");
+        log.info(memberSecurityDTO.getMid(), memberSecurityDTO.getMpassword(), memberSecurityDTO.getMname());
+
+        redirectAttributes.addFlashAttribute("result", "modified");
+        memberService.modify(memberSecurityDTO);
+
+        return "redirect:/mypage/read";
+
+    }
 
     // 배송지 관리 -> 모달창 폼을 띄워서 배송지 등록
     @GetMapping("/shipping")
@@ -63,42 +99,42 @@ public class MypageController {
         }
 
         log.info(shippingDTO);
-        log.info("등록 전 dno : " + shippingDTO.getDno());
+        log.info("등록 전 sno : " + shippingDTO.getSno());
 
         // 등록
-        if(shippingDTO.getDno() == null) {
+        if(shippingDTO.getSno() == null) {
 
             // 새로 등록되는 배송지가 기본배송지가 될 경우 기존 배송지를 기본 배송지에서 해제
-            if(shippingDTO.getDdefault() != null) {
+            if(shippingDTO.getSdefault() != null) {
 
                 log.info("배송지 추가 회원 mid " + shippingDTO.getMid());
 
-                shippingService.modifyDdefault(shippingDTO.getMid());
+                shippingService.modifySdefault(shippingDTO.getMid());
             }
 
-            Long dno = shippingService.register(shippingDTO);
-            redirectAttributes.addFlashAttribute("result", dno);
+            Long sno = shippingService.register(shippingDTO);
+            redirectAttributes.addFlashAttribute("result", sno);
 
-            log.info("등록 후 dno : " + dno);
+            log.info("등록 후 sno : " + sno);
 
             return "redirect:/mypage/shipping";
         }
 
         // 수정
-        if(shippingDTO.getDno() != null) {
+        if(shippingDTO.getSno() != null) {
 
             // 수정되는 배송지가 기본배송지가 될 경우 기존 배송지를 기본 배송지에서 해제
-            if(shippingDTO.getDdefault() != null) {
+            if(shippingDTO.getSdefault() != null) {
 
                 log.info("배송지 추가 회원 mid " + shippingDTO.getMid());
 
-                shippingService.modifyDdefault(shippingDTO.getMid());
+                shippingService.modifySdefault(shippingDTO.getMid());
             }
 
-            log.info("전달 받은 dno 값 : " + shippingDTO.getDno());
+            log.info("전달 받은 dno 값 : " + shippingDTO.getSno());
             shippingService.modify(shippingDTO);
             redirectAttributes.addFlashAttribute("result", "modified");
-            redirectAttributes.addAttribute("dno", shippingDTO.getDno());
+            redirectAttributes.addAttribute("dno", shippingDTO.getSno());
 
             return "redirect:/mypage/shipping";
         }
@@ -108,11 +144,11 @@ public class MypageController {
     
     // 삭제
     @PostMapping("/removeShipping")
-    public String remove(Long dno, RedirectAttributes redirectAttributes) {
+    public String remove(Long sno, RedirectAttributes redirectAttributes) {
 
-        log.info("전송받은 dno 값" + dno);
+        log.info("전송받은 sno 값" + sno);
 
-        shippingService.remove(dno);
+        shippingService.remove(sno);
         redirectAttributes.addFlashAttribute("result", "removed");
 
         return "redirect:/mypage/shipping";

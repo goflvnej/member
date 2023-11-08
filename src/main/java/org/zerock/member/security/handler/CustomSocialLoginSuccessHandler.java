@@ -33,7 +33,7 @@ public class CustomSocialLoginSuccessHandler implements AuthenticationSuccessHan
                 (memberSecurityDTO.getMpassword().equals("1111") || passwordEncoder.matches("1111", memberSecurityDTO.getMpassword()))) {
 
             log.info("소설 로그인 후 마이페이지 화면으로 이동");
-            response.sendRedirect("/member/mypage/read");
+            response.sendRedirect("/mypage/read");
 
             return;
         } else {
