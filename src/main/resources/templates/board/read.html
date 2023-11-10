@@ -286,17 +286,12 @@
         printReplies(page, size)
     }, false)
 
-    // addReplyBtn 버튼 클릭시 댓글 등록 모달창 띄우기
+    // 게시글 하단의 댓글 등록 버튼 클릭시 댓글 등록 모달창 띄우기
     document.querySelector(".addReplyBtn").addEventListener("click", function(e) {
         registerModal.show()
     }, false)
 
-    // closeRegisterBtn 버튼 클릭시 댓글 등록 모달창 닫기
-    closeRegisterBtn.addEventListener("click", function(e) {
-        registerModal.hide()
-    }, false)
-
-    // 모달창 하단의 Register 버튼 클릭시 이벤트 처리
+    // 댓글 등록 모달창의 등록 버튼 클릭시 이벤트 처리
     registerBtn.addEventListener("click", function(e) {
 
         const replyObj = {
@@ -317,5 +312,55 @@
             alert("댓글 등록 모달창 등록 버튼 클릭시 예외 발생")
         })
     }, false)
+
+    // 댓글 등록 모달창의 닫기 버튼 클릭시 모달창 닫기
+    closeRegisterBtn.addEventListener("click", function(e) {
+        registerModal.hide()
+    }, false)
+
+    // 댓글 수정 모달창의 수정 버튼 클릭 시 이벤트
+    modifyBtn.addEventListener("click", function(e) {
+
+        const replyObj = {
+            bno:bno,
+            rno:replyHeader.innerHTML,
+            replyText:modifyText.value
+        }
+
+        modifyReply(replyObj).then(result => {
+
+            alert(result.rno + " 댓글이 수정되었습니다.")
+            replyText.value = ''
+            modifyModal.hide()
+            printReplies(page, size)
+
+        }).catch(e => {
+            console.log(e)
+        })
+    }, false)
+
+    // 댓글 수정 모달창의 닫기 버튼 클릭 시 이벤트
+    closeModifyBtn.addEventListener("click", function(e) {
+
+        modifyModal.hide()
+    }, false)
+
+    // 댓글 수정 모달창의 삭제 버튼 클릭 시 이벤트
+    removeBtn.addEventListener("click", function(e) {
+
+        removeReply(replyHeader.innerHTML).then(result => {
+
+            alert(result.rno + " 댓글이 삭제되었습니다.")
+            replyText.value = ''
+            modifyModal.hide()
+
+            page = 1
+
+            printReplies(page, size)
+
+        }).catch(e => {
+            console.log(e)
+        })
+    })
 
 </script>

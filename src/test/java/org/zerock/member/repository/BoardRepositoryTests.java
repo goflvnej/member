@@ -26,6 +26,9 @@ public class BoardRepositoryTests {
     @Autowired
     private BoardRepository boardRepository;
 
+    @Autowired
+    private ReplyRepository replyRepository;
+
     @Test
     public void testInsert() {
         IntStream.rangeClosed(1,100).forEach(i -> {
@@ -198,5 +201,16 @@ public class BoardRepositoryTests {
         }
 
         boardRepository.save(board);
+    }
+
+    @Test
+    @Transactional
+    @Commit
+    public void testRemoveAll() {
+
+        Long bno = 101L;
+
+        replyRepository.deleteByBoard_Bno(bno); // 해당 게시글의 댓글 삭제
+        boardRepository.deleteById(bno);        // 해당 게시글의 첨부파일 및 게시글 삭제
     }
 }

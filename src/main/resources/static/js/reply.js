@@ -19,7 +19,7 @@ async function getList({bno, page, size, goLast}) {
     return result.data;
 }
 
-// 새 댓글 등록
+// 댓글 등록
 async function addReply(replyObj) {
     
     const response = await axios.post(`/replies/`, replyObj) // POST 방식 호출
@@ -35,10 +35,18 @@ async function getReply(rno) {
     return response.data
 }
 
-// 특정 댓글 수정
+// 댓글 수정
 async function modifyReply(replyObj) {
 
     const response = await axios.put(`/replies/${replyObj.rno}`, replyObj)
+
+    return response.data
+}
+
+// 댓글 삭제
+async function removeReply(rno) {
+
+    const response = await axios.delete(`/replies/${rno}`)
 
     return response.data
 }
