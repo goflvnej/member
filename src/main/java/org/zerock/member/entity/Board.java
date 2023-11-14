@@ -1,6 +1,7 @@
 package org.zerock.member.entity;
 
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -45,6 +46,7 @@ public class Board extends BaseEntity {
                fetch = FetchType.LAZY,
                orphanRemoval = true)        // 하위 속성값이 true인 경우 하위 엔티티에도 실제로 삭제가 이루어짐 -> 게시글 엔티티 삭제 시 함께 삭제됨
     @Builder.Default                        // 빌더 패턴 사용 시 기본값 지정
+    @BatchSize(size = 10)                   // N+1문제 해결책 : 모든 게시글에 대해 이미지셋을 조회하는 쿼리가 매번 발생하는 문제 해결 (게시글 10개씩 묶어서 imageSet 쿼리문 실행)
     private Set<BoardImage> imageSet = new HashSet<>();
 
     // 게시글 이미지 추가

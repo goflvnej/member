@@ -6,11 +6,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.zerock.member.dto.BoardListReplyCountDTO;
+import org.zerock.member.dto.*;
 import org.zerock.member.entity.Board;
-import org.zerock.member.dto.BoardDTO;
-import org.zerock.member.dto.PageRequestDTO;
-import org.zerock.member.dto.PageResponseDTO;
 import org.zerock.member.repository.BoardRepository;
 
 import javax.transaction.Transactional;
@@ -30,7 +27,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public Long register(BoardDTO boardDTO) {
 
-        Board board = modelMapper.map(boardDTO, Board.class);
+        Board board = dtoToEntity(boardDTO);
         Long bno = boardRepository.save(board).getBno();
 
         return bno;
@@ -39,9 +36,10 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public BoardDTO readOne(Long bno) {
 
-        Optional<Board> result = boardRepository.findById(bno);                 // DB에서 bno 값을 이용해서 해당 엔티티로 리턴
+//      Optional<Board> result = boardRepository.findById(bno);                 // DB에서 bno 값을 이용해서 해당 엔티티로 리턴
+        Optional<Board> result = boardRepository.findByIdWithImages(bno);       // board_image 조인 처리
         Board board = result.orElseThrow();                                     // Optional<Board> 객체가 null 값이 아니면 board 객체로 담음
-        BoardDTO boardDTO = modelMapper.map(board, BoardDTO.class);             // Board 엔티티를 BoardDTO 객체로 리턴
+        BoardDTO boardDTO = entityToDTO(board);                                 // Board 엔티티를 BoardDTO 객체로 리턴
 
         return boardDTO;
     }
@@ -52,6 +50,17 @@ public class BoardServiceImpl implements BoardService {
         Optional<Board> result = boardRepository.findById(boardDTO.getBno());   // boardDTO 객체에서 수정할 데이터의 bno 값을 받아 엔티티로 리턴
         Board board = result.orElseThrow();                                     // Optional<Board> 객체가 null 값이 아니면 board 객체로 담음
         board.change(boardDTO.getTitle(), boardDTO.getContent());               // 기존 엔티티의 제목과 내용을 DTO 객체의 값으로 변경
+        
+        // 첨부파일 수정 처리
+        board.clearImages();
+        
+        if(boardDTO.getFileNames() != null) {
+            for(String fileName : boardDTO.getFileNames()) {
+                String[] arr = fileName.split("_");
+                board.addImage(arr[0], arr[1]);
+            }
+        }
+        
         boardRepository.save(board);                                            // DB에 수정된 데이터 값 저장
     }
 
@@ -97,6 +106,22 @@ public class BoardServiceImpl implements BoardService {
                 .pageRequestDTO(pageRequestDTO)
                 .dtoList(result.getContent())
                 .total((int)result.getTotalElements())
+                .build();
+    }
+
+    @Override
+    public PageResponseDTO<BoardListAllDTO> listWithAll(PageRequestDTO pageRequestDTO) {
+
+        String[] types = pageRequestDTO.getTypes();
+        String keyword = pageRequestDTO.getKeyword();
+        Pageable pageable = pageRequestDTO.getPageable("bno");
+
+        Page<BoardListAllDTO> result = boardRepository.searchWithAll(types, keyword, pageable);
+
+        return PageResponseDTO.<BoardListAllDTO>withAll()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(result.getContent())
+                .total((int) result.getTotalElements())
                 .build();
     }
 }
